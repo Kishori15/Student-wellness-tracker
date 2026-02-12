@@ -1,0 +1,45 @@
+================================================================================
+FIX "Not Found" / 404 - Put project in XAMPP htdocs
+================================================================================
+
+The error means: Apache cannot find your project at that URL.
+Your project must be INSIDE XAMPP's htdocs folder.
+
+--------------------------------------------------------------------------------
+STEP 1: Copy project to htdocs
+--------------------------------------------------------------------------------
+
+Option A - Using File Explorer (manual):
+  1. Open:  C:\xampp\htdocs
+  2. Copy your ENTIRE project folder from:
+     d:\pbl\stud wellness tracker\StudentWellnessTracker
+  3. Paste it into  C:\xampp\htdocs
+  4. RENAME the pasted folder to EXACTLY (all caps, no spaces):
+     STUDENTWELLNESSTRACKER
+
+Option B - Using PowerShell (run from any folder):
+  xcopy "d:\pbl\stud wellness tracker\StudentWellnessTracker\*" "C:\xampp\htdocs\STUDENTWELLNESSTRACKER\" /E /I /Y
+
+--------------------------------------------------------------------------------
+STEP 2: Verify
+--------------------------------------------------------------------------------
+
+  1. Open File Explorer and go to:  C:\xampp\htdocs
+  2. You MUST see a folder named:  STUDENTWELLNESSTRACKER
+  3. Inside it you must see:  index.php, login.php, register.php, config, assets, etc.
+
+--------------------------------------------------------------------------------
+STEP 3: Use these URLs (after copy)
+--------------------------------------------------------------------------------
+
+  Login:     http://localhost/STUDENTWELLNESSTRACKER/login.php
+  Register:  http://localhost/STUDENTWELLNESSTRACKER/register.php
+  Home:      http://localhost/STUDENTWELLNESSTRACKER/
+
+--------------------------------------------------------------------------------
+If your XAMPP is installed elsewhere (e.g. D:\xampp):
+--------------------------------------------------------------------------------
+
+  Replace  C:\xampp  with your path, e.g.  D:\xampp\htdocs\STUDENTWELLNESSTRACKER
+
+================================================================================
