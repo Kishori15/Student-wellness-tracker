@@ -84,26 +84,117 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Pie Chart: Stress Level Distribution
-        const ctxStressPie = document.getElementById('chartStressPie');
-        if (ctxStressPie && data.stressDistribution) {
-            const total = data.stressDistribution.low + data.stressDistribution.moderate + data.stressDistribution.high;
+        // Mood Trend Chart (Date vs Mood 1-3) with filters
+        const ctxMoodTrend = document.getElementById('chartMoodTrend');
+        if (ctxMoodTrend && Array.isArray(data.moodData)) {
+            const moodLabels = { 1: '😞 Sad', 2: '😐 Neutral', 3: '😊 Happy' };
+            let moodChart = null;
+            const moodData = data.moodData || [];
+
+            function getFilteredMoodData(range) {
+                const now = new Date();
+                let from;
+                if (range === '7') from = new Date(now);
+                else if (range === '30') from = new Date(now);
+                else return data.moodData;
+                if (range === '7') from.setDate(from.getDate() - 7);
+                else if (range === '30') from.setDate(from.getDate() - 30);
+                const fromStr = from.toISOString().slice(0, 10);
+                return moodData.filter(function (p) { return p.date >= fromStr; });
+            }
+
+            function applyCustomRange() {
+                const from = document.getElementById('moodDateFrom').value;
+                const to = document.getElementById('moodDateTo').value;
+                if (!from || !to) return;
+                const filtered = moodData.filter(function (p) { return p.date >= from && p.date <= to; });
+                renderMoodChart(filtered);
+            }
+
+            function renderMoodChart(pts) {
+                const labels = pts.map(function (p) { return p.date; });
+                const values = pts.map(function (p) { return p.mood; });
+                if (moodChart) moodChart.destroy();
+                moodChart = new Chart(ctxMoodTrend, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Mood',
+                            data: values,
+                            borderColor: '#4a90e2',
+                            backgroundColor: 'rgba(74, 144, 226, 0.15)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#4a90e2'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            y: {
+                                min: 0.5,
+                                max: 3.5,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function (v) { return moodLabels[v] || v; }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (ctx) {
+                                        return moodLabels[ctx.raw] || ctx.raw;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            document.querySelectorAll('.btn-filter').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    if (this.dataset.range === 'custom') {
+                        document.querySelector('.mood-filters .custom-range').style.display = 'inline-flex';
+                        document.querySelectorAll('.btn-filter').forEach(function (b) { b.classList.remove('active'); });
+                        this.classList.add('active');
+                        return;
+                    }
+                    document.querySelector('.mood-filters .custom-range').style.display = 'none';
+                    document.querySelectorAll('.btn-filter').forEach(function (b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    const filtered = getFilteredMoodData(this.dataset.range);
+                    renderMoodChart(filtered);
+                });
+            });
+            var customApply = document.getElementById('moodCustomApply');
+            if (customApply) customApply.addEventListener('click', applyCustomRange);
+
+            renderMoodChart(getFilteredMoodData('7'));
+        }
+
+        // Pie Chart: Mood Distribution (😞 Sad, 😐 Neutral, 😊 Happy)
+        const ctxMoodPie = document.getElementById('chartMoodPie');
+        if (ctxMoodPie && data.moodDistribution) {
+            const total = data.moodDistribution.sad + data.moodDistribution.neutral + data.moodDistribution.happy;
             if (total > 0) {
-                new Chart(ctxStressPie, {
+                new Chart(ctxMoodPie, {
                     type: 'pie',
                     data: {
-                        labels: ['Low', 'Moderate', 'High'],
+                        labels: ['😞 Sad', '😐 Neutral', '😊 Happy'],
                         datasets: [{
                             data: [
-                                data.stressDistribution.low,
-                                data.stressDistribution.moderate,
-                                data.stressDistribution.high
+                                data.moodDistribution.sad,
+                                data.moodDistribution.neutral,
+                                data.moodDistribution.happy
                             ],
-                            backgroundColor: [
-                                '#4caf50',
-                                '#ff9800',
-                                '#f44336'
-                            ],
+                            backgroundColor: ['#f44336', '#ff9800', '#4caf50'],
                             borderWidth: 1
                         }]
                     },
@@ -113,10 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         plugins: {
                             legend: {
                                 position: 'right',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 15
-                                }
+                                labels: { usePointStyle: true, padding: 15 }
                             }
                         }
                     }

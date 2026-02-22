@@ -80,6 +80,62 @@ body {
     border-color: #4a90e2;
 }
 
+/* Mood selection (emoji) */
+.mood-select {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.mood-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 12px 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.mood-option:hover {
+    border-color: #4a90e2;
+    background-color: #f0f7ff;
+}
+
+.mood-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.mood-option input:checked + .mood-emoji,
+.mood-option input:checked ~ .mood-label {
+    font-weight: 600;
+}
+
+.mood-option input:checked ~ .mood-emoji {
+    transform: scale(1.15);
+}
+
+.mood-option:has(input:checked) {
+    border-color: #4a90e2;
+    background-color: #e3f2fd;
+}
+
+.mood-emoji {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 6px;
+    transition: transform 0.2s;
+}
+
+.mood-label {
+    font-size: 14px;
+    color: #333;
+}
+
 .btn {
     padding: 12px 24px;
     border: none;
@@ -272,6 +328,109 @@ body {
     color: #2e7d32;
 }
 
+.card-change {
+    font-size: 13px;
+    margin-top: 8px;
+    font-weight: 500;
+}
+.change-up { color: #2e7d32; }
+.change-down { color: #c62828; }
+
+/* Report period filters */
+.report-period-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.report-period-filters .btn-filter { text-decoration: none; }
+.inline-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.inline-form input[type="date"] {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.custom-range-inline .btn-filter-apply {
+    padding: 6px 12px;
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Goals progress */
+.goals-progress-section {
+    margin-bottom: 28px;
+}
+.goals-progress-section .section-title {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.link-edit {
+    font-size: 14px;
+    font-weight: normal;
+    color: #4a90e2;
+    text-decoration: none;
+}
+.link-edit:hover { text-decoration: underline; }
+.goals-progress-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+.goal-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+.goal-label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+.progress-bar-wrap {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4a90e2, #357abd);
+    border-radius: 5px;
+    transition: width 0.3s;
+}
+.goal-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #666;
+}
+.goal-status.status-completed { color: #2e7d32; font-weight: 600; }
+.goal-status.status-in-progress { color: #ff9800; font-weight: 500; }
+.goal-status.status-not-achieved { color: #c62828; font-weight: 500; }
+.goals-cta {
+    background: #e3f2fd;
+    border: 1px solid #4a90e2;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+}
+.goals-cta a { color: #1e3a5f; font-weight: 600; }
+
 /* Admin colored cards */
 .admin-cards .card-green {
     background-color: #4caf50;
@@ -329,6 +488,67 @@ body {
     font-weight: 600;
 }
 
+.chart-card-full {
+    grid-column: 1 / -1;
+}
+
+.mood-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.btn-filter {
+    padding: 8px 14px;
+    border: 1px solid #4a90e2;
+    background: #fff;
+    color: #4a90e2;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-filter:hover {
+    background: #e3f2fd;
+}
+
+.btn-filter.active {
+    background: #4a90e2;
+    color: #fff;
+}
+
+.mood-filters .custom-range {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mood-filters .custom-range input[type="date"] {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-filter-apply {
+    padding: 6px 12px;
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.form-hint {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
 /* Forms */
 .form-card {
     background-color: #fff;
@@ -378,6 +598,52 @@ body {
     background-color: #f5f5f5;
 }
 
+/* Action Buttons */
+.action-buttons {
+    white-space: nowrap;
+}
+
+.btn-action {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 6px;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.btn-view {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #357abd;
+}
+
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f;
+}
+
+.btn-delete-small {
+    padding: 4px 10px;
+    font-size: 12px;
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-delete-small:hover {
+    background-color: #d32f2f;
+}
+
 /* Report Card */
 .report-card {
     background-color: #fff;
@@ -404,6 +670,267 @@ body {
     margin: 30px 0 20px 0;
     color: #333;
     font-weight: 600;
+}
+
+/* Daily Check-In Page */
+.checkin-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    color: white;
+    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.checkin-banner h2 {
+    color: white;
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.checkin-subtitle {
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+}
+
+.checkin-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.checkin-card.already-checked {
+    text-align: center;
+}
+
+.checkin-icon {
+    font-size: 64px;
+    color: #4caf50;
+    margin-bottom: 16px;
+}
+
+.checkin-section {
+    margin-bottom: 28px;
+}
+
+.checkin-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.mood-select-large {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mood-option-large {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 20px 30px;
+    border: 3px solid #e0e0e0;
+    border-radius: 16px;
+    background: white;
+    transition: all 0.3s;
+    min-width: 120px;
+}
+
+.mood-option-large:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.mood-option-large input {
+    position: absolute;
+    opacity: 0;
+}
+
+.mood-option-large input:checked + .mood-emoji-large,
+.mood-option-large:has(input:checked) {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.mood-emoji-large {
+    font-size: 48px;
+    margin-bottom: 8px;
+    transition: transform 0.3s;
+}
+
+.mood-option-large:has(input:checked) .mood-emoji-large {
+    transform: scale(1.15);
+}
+
+.mood-label-large {
+    font-size: 16px;
+    font-weight: 600;
+    color: inherit;
+}
+
+.checkin-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.checkin-form select.checkin-input {
+    cursor: pointer;
+    appearance: auto;
+}
+
+.checkin-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.checkin-textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.3s;
+}
+
+.checkin-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.checkin-hint {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #666;
+}
+
+.btn-checkin {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+}
+
+.btn-checkin:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-checkin:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.checkin-time-hint {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #666;
+}
+
+/* Wellness Score & Risk Indicators */
+.wellness-score-card {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.wellness-score-value {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 12px 0;
+}
+
+.wellness-score-label {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.score-green { color: #2e7d32; }
+.score-yellow { color: #f57c00; }
+.score-red { color: #c62828; }
+
+.risk-alert {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.risk-alert-icon {
+    font-size: 24px;
+}
+
+.streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.smart-insight {
+    background: rgba(102, 126, 234, 0.05);
+    border-left: 4px solid #667eea;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #555;
+}
+
+.privacy-message {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #2e7d32;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 /* Responsive */

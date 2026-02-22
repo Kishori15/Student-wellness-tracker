@@ -13,18 +13,31 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Wellness data table
+-- Wellness Check-In table (single source for all analytics, dashboards, reports)
+-- Maps to: student_id=user_id, note=reflection_note, checkin_date=entry_date
 CREATE TABLE IF NOT EXISTS wellness_data (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL COMMENT 'student_id',
     sleep_hours DECIMAL(4,2) NOT NULL,
     study_hours DECIMAL(4,2) NOT NULL,
-    activity_minutes INT NOT NULL,
-    stress_level INT NOT NULL CHECK (stress_level >= 1 AND stress_level <= 5),
-    entry_date DATE NOT NULL,
+    activity_minutes INT NOT NULL DEFAULT 0,
+    stress_level INT NOT NULL DEFAULT 2,
+    mood TINYINT NOT NULL DEFAULT 2 COMMENT '1=Sad, 2=Neutral, 3=Happy',
+    entry_date DATE NOT NULL COMMENT 'checkin_date',
+    reflection_note TEXT NULL DEFAULT NULL COMMENT 'Optional private note (Wellness Check-In)',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_date (user_id, entry_date)
+);
+
+-- Student goals (optional: run student_goals.sql if table missing on existing installs)
+CREATE TABLE IF NOT EXISTS student_goals (
+    user_id INT NOT NULL PRIMARY KEY,
+    sleep_goal DECIMAL(4,2) NOT NULL DEFAULT 7.0,
+    study_goal DECIMAL(4,2) NOT NULL DEFAULT 4.0,
+    activity_goal INT NULL DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Default users will be created by setup_passwords.php

@@ -23,9 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $username = trim($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
+        $selected_role = $_POST['role'] ?? '';
 
-        if (empty($username) || empty($password)) {
-            $error = 'Please enter both username and password.';
+        if ($username === '' || $password === '' || $selected_role === '') {
+            $error = 'Please enter username, password, and select a role.';
+        } elseif (!in_array($selected_role, ['admin', 'student'], true)) {
+            $error = 'Invalid role selected.';
         } else {
             $stmt = mysqli_prepare($conn, 'SELECT id, username, password, role FROM users WHERE username = ?');
             mysqli_stmt_bind_param($stmt, 's', $username);
@@ -35,19 +38,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_close($stmt);
 
             if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['role'] = $user['role'];
-
-                if ($user['role'] === 'admin') {
-                    header('Location: ../frontend/admin_dashboard.php');
+                if ($user['role'] !== $selected_role) {
+                    $error = 'Invalid role selected.';
                 } else {
-                    header('Location: ../frontend/dashboard.php');
-                }
-                exit;
-            }
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['role'] = $user['role'];
 
-            $error = 'Invalid username or password!';
+                    if ($user['role'] === 'admin') {
+                        header('Location: ../frontend/admin_dashboard.php');
+                    } else {
+                        header('Location: ../frontend/dashboard.php');
+                    }
+                    exit;
+                }
+            } else {
+                $error = 'Invalid username or password!';
+            }
         }
     }
 }
@@ -69,13 +76,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="login-card">
             <form method="post" action="login.php">
                 <div class="form-group">
-                    <label for="username">Username:</label>
+                    <label for="username">Email / Username:</label>
                     <input type="text" id="username" name="username" required
                            value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <select id="role" name="role" required>
+                        <option value="">Select role</option>
+                        <option value="student" <?php echo (($_POST['role'] ?? '') === 'student') ? 'selected' : ''; ?>>Student</option>
+                        <option value="admin" <?php echo (($_POST['role'] ?? '') === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
                 <?php if ($db_error): ?>

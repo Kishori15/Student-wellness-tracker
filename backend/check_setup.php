@@ -75,7 +75,7 @@ $required_files = [
     '../frontend/index.php',
     '../frontend/dashboard.php',
     '../frontend/admin_dashboard.php',
-    '../frontend/add_wellness.php',
+    '../frontend/check_in.php',
     '../frontend/view_wellness.php',
     '../frontend/reports.php',
     '../frontend/assets/css/style.css',

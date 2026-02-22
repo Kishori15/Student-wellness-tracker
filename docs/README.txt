@@ -68,7 +68,7 @@ Root Files:
 - logout.php             - Logout and destroy session
 - dashboard.php          - Student dashboard (charts + summary cards)
 - admin_dashboard.php    - Admin dashboard (overall stats + student table)
-- add_wellness.php       - Form to enter wellness data (student)
+- check_in.php           - Wellness Check-In (single source for all wellness data)
 - view_wellness.php      - View personal wellness records (student)
 - reports.php            - Overall campus report (admin)
 - setup_passwords.php    - One-time setup (DELETE after use)
@@ -154,7 +154,7 @@ USAGE GUIDE
 
 FOR STUDENTS:
 1. Login with student credentials
-2. Click "Add Wellness Data" to enter daily wellness metrics
+2. Click "Wellness Check-In" to submit your daily wellness check-in
 3. View "Dashboard" to see charts and summary cards
 4. Click "View Reports" to see personal records table
 

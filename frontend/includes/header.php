@@ -16,6 +16,7 @@ $role = $_SESSION['role'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>Student Wellness</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -37,11 +38,17 @@ $role = $_SESSION['role'];
                     <a href="dashboard.php" class="nav-item <?php echo ($current_page ?? '') === 'dashboard' ? 'active' : ''; ?>">
                         <span class="nav-icon">&#128202;</span> Dashboard
                     </a>
-                    <a href="add_wellness.php" class="nav-item <?php echo ($current_page ?? '') === 'add_wellness' ? 'active' : ''; ?>">
-                        <span class="nav-icon">&#128221;</span> Add Wellness Data
+                    <a href="check_in.php" class="nav-item <?php echo ($current_page ?? '') === 'check_in' ? 'active' : ''; ?>">
+                        <span class="nav-icon">&#128221;</span> Wellness Check-In
+                    </a>
+                    <a href="goals.php" class="nav-item <?php echo ($current_page ?? '') === 'goals' ? 'active' : ''; ?>">
+                        <span class="nav-icon">&#127919;</span> My Goals
+                    </a>
+                    <a href="reports_student.php" class="nav-item <?php echo ($current_page ?? '') === 'reports_student' ? 'active' : ''; ?>">
+                        <span class="nav-icon">&#128200;</span> Weekly & Monthly Reports
                     </a>
                     <a href="view_wellness.php" class="nav-item <?php echo ($current_page ?? '') === 'view_wellness' ? 'active' : ''; ?>">
-                        <span class="nav-icon">&#128196;</span> View Reports
+                        <span class="nav-icon">&#128196;</span> View Records
                     </a>
                 <?php else: ?>
                     <a href="admin_dashboard.php" class="nav-item <?php echo ($current_page ?? '') === 'admin_dashboard' ? 'active' : ''; ?>">

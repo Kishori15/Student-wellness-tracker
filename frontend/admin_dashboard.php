@@ -48,19 +48,27 @@ $result = mysqli_query($conn,
         (SELECT sleep_hours FROM wellness_data w WHERE w.user_id = u.id ORDER BY entry_date DESC LIMIT 1) AS sleep_hrs,
         (SELECT study_hours FROM wellness_data w WHERE w.user_id = u.id ORDER BY entry_date DESC LIMIT 1) AS study_hrs,
         (SELECT activity_minutes FROM wellness_data w WHERE w.user_id = u.id ORDER BY entry_date DESC LIMIT 1) AS activity_mins,
-        (SELECT stress_level FROM wellness_data w WHERE w.user_id = u.id ORDER BY entry_date DESC LIMIT 1) AS stress_level
+        (SELECT stress_level FROM wellness_data w WHERE w.user_id = u.id ORDER BY entry_date DESC LIMIT 1) AS stress_level,
+        (SELECT COUNT(*) FROM wellness_data WHERE user_id = u.id) AS entry_count
      FROM users u WHERE u.role = "student"
      ORDER BY u.username');
 $student_rows = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $student_rows[] = [
+        'id' => (int)$row['id'],
         'name' => $row['username'],
         'sleep_hrs' => $row['sleep_hrs'] !== null ? $row['sleep_hrs'] : '-',
         'study_hrs' => $row['study_hrs'] !== null ? $row['study_hrs'] : '-',
         'activity_mins' => $row['activity_mins'] !== null ? $row['activity_mins'] : '-',
-        'stress_level' => $row['stress_level'] !== null ? $row['stress_level'] : '-'
+        'stress_level' => $row['stress_level'] !== null ? $row['stress_level'] : '-',
+        'entry_count' => (int)$row['entry_count']
     ];
 }
+
+// Check for messages from deletion actions
+$message = isset($_SESSION['admin_message']) ? $_SESSION['admin_message'] : '';
+$error = isset($_SESSION['admin_error']) ? $_SESSION['admin_error'] : '';
+unset($_SESSION['admin_message'], $_SESSION['admin_error']);
 
 $page_title = 'Admin Dashboard';
 $current_page = 'admin_dashboard';
@@ -68,6 +76,12 @@ include 'includes/header.php';
 ?>
 
 <div class="content-inner">
+    <?php if ($message): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div>
+    <?php endif; ?>
+    <?php if ($error): ?>
+        <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
     <div class="summary-cards admin-cards">
         <div class="card card-green">
             <div class="card-title">Total Students</div>
@@ -96,7 +110,7 @@ include 'includes/header.php';
     </div>
 
     <div class="table-card" id="records">
-        <h3>Student Data</h3>
+        <h3>All Registered Students</h3>
         <table class="data-table">
             <thead>
                 <tr>
@@ -105,11 +119,13 @@ include 'includes/header.php';
                     <th>Study Hrs</th>
                     <th>Activity (mins)</th>
                     <th>Stress Level</th>
+                    <th>Records</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($student_rows)): ?>
-                    <tr><td colspan="5">No student data yet.</td></tr>
+                    <tr><td colspan="7">No students registered yet.</td></tr>
                 <?php else: ?>
                     <?php foreach ($student_rows as $s): ?>
                         <tr>
@@ -118,6 +134,11 @@ include 'includes/header.php';
                             <td><?php echo htmlspecialchars($s['study_hrs']); ?></td>
                             <td><?php echo htmlspecialchars($s['activity_mins']); ?></td>
                             <td><?php echo htmlspecialchars($s['stress_level']); ?></td>
+                            <td><?php echo $s['entry_count']; ?> entries</td>
+                            <td class="action-buttons">
+                                <a href="admin_view_student.php?id=<?php echo $s['id']; ?>" class="btn-action btn-view" title="View Records">View Records</a>
+                                <button onclick="confirmDeleteStudent(<?php echo $s['id']; ?>, '<?php echo htmlspecialchars(addslashes($s['name'])); ?>')" class="btn-action btn-delete" title="Delete Student">Delete</button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -132,6 +153,12 @@ window.adminDashboardData = {
     sleepData: <?php echo json_encode($months_sleep); ?>,
     studyData: <?php echo json_encode($months_study); ?>
 };
+
+function confirmDeleteStudent(studentId, studentName) {
+    if (confirm('Are you sure you want to delete student "' + studentName + '"?\n\nThis will:\n- Delete the student account\n- Delete ALL wellness records for this student\n\nThis action cannot be undone!')) {
+        window.location.href = '../backend/admin_delete_student.php?id=' + studentId;
+    }
+}
 </script>
 
 <?php include 'includes/footer.php'; ?>
